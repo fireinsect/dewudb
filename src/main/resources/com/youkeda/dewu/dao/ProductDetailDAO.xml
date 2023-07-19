@@ -34,9 +34,9 @@
 
     <update id="updateByPrimaryKey">
         update product_detail
-        set 
+        set
         <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(productId)">
-            prodcut_id = #{productId},
+            product_id = #{productId},
         </if>
 
         <if test="price != null">
@@ -53,4 +53,11 @@
         gmt_modified = now()
         where id = #{id}
     </update>
+
+    <select id="selectByProductId" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select id, product_id, price, `size`, stock, gmt_created, gmt_modified
+    from product_detail
+    where product_id = #{productId,jdbcType=VARCHAR}
+  </select>
+
 </mapper>

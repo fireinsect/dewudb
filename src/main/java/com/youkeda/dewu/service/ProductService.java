@@ -4,12 +4,6 @@ import com.youkeda.dewu.model.Paging;
 import com.youkeda.dewu.model.Product;
 import com.youkeda.dewu.param.BasePageParam;
 
-/**
- * TODO
- *
- * @author zr
- * @date 2020/7/13, 周一
- */
 public interface ProductService {
 
     /**

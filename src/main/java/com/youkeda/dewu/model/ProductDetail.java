@@ -2,12 +2,6 @@ package com.youkeda.dewu.model;
 
 import java.util.Date;
 
-/**
- * TODO
- *
- * @author zr
- * @date 2020/7/8, 周三
- */
 public class ProductDetail {
 
     /**

@@ -16,4 +16,7 @@ public interface ProductDetailDAO {
     List<ProductDetailDO> selectAll();
 
     int updateByPrimaryKey(ProductDetailDO record);
+
+    List<ProductDetailDO> selectByProductId(String productId);
+
 }

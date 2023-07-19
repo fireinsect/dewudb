@@ -1,11 +1,5 @@
 package com.youkeda.dewu.param;
 
-/**
- * TODO
- *
- * @author zr
- * @date 2020/7/13, 周一
- */
 public class BasePageParam {
 
     /**

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @RequestMapping("/api/product")
 @Controller
@@ -28,12 +29,16 @@ public class ProductApi {
         result.setData(productService.pageQueryProduct(param));
         return result;
     }
+
     @ResponseBody
     @GetMapping("/get")
-    public Result<Product> getQuery(String productId) {
-        Result<Product> productResult=new Result<>();
-        productResult.setData(productService.get(productId));
-        productResult.setCode("200");
-        return productResult;
+    public Result<Product> get(@RequestParam("productId") String productId) {
+
+        Result<Product> result = new Result<>();
+
+        result.setSuccess(true);
+        result.setData(productService.get(productId));
+        return result;
     }
+
 }
