@@ -1,6 +1,7 @@
 package com.youkeda.dewu.dao;
 
 import com.youkeda.dewu.dataobject.ProductDO;
+import com.youkeda.dewu.param.BasePageParam;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -16,5 +17,9 @@ public interface ProductDAO {
     List<ProductDO> selectAll();
 
     int updateByPrimaryKey(ProductDO record);
+
+    int selectAllCounts();
+
+    List<ProductDO> pageQuery(BasePageParam param);
 
 }

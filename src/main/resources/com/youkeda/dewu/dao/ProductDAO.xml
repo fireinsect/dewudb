@@ -63,5 +63,17 @@
     from product
   </select>
 
+    <select id="selectAllCounts" resultType="int">
+    select count(1)
+    from product
+  </select>
+
+    <select id="pageQuery" resultMap="BaseResultMap">
+        select id, name, price, purchase_num, product_intro,product_imgs,
+        gmt_created, gmt_modified
+        from product
+        <bind name="currentIndex" value="pagination * pageSize"/>
+        limit #{currentIndex},#{pageSize}
+    </select>
 
 </mapper>
