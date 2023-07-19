@@ -10,42 +10,47 @@
         <result column="gmt_created" jdbcType="TIMESTAMP" property="gmtCreated"/>
         <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified"/>
     </resultMap>
-
     <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
-        delete from product_detail where id = #{id}
-    </delete>
-
+    delete from product_detail
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
     <insert id="insert" parameterType="com.youkeda.dewu.dataobject.ProductDetailDO">
-        insert into product_detail values(
-            #{id},#{productId},#{price},#{size},#{stock},now(),now()
-        )
-    </insert>
-
+    insert into product_detail (id, product_id, price, 
+      size, stock, gmt_created, 
+      gmt_modified)
+    values (#{id,jdbcType=VARCHAR}, #{productId,jdbcType=VARCHAR}, #{price,jdbcType=DOUBLE}, 
+      #{size,jdbcType=DOUBLE}, #{stock,jdbcType=INTEGER}, now(),
+     now())
+  </insert>
     <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
-        select * from product_detail where id=#{id}
-    </select>
-
+    select id, product_id, price, `size`, stock, gmt_created, gmt_modified
+    from product_detail
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
     <select id="selectAll" resultMap="BaseResultMap">
-        select * from product_detail
-    </select>
+    select id, product_id, price, `size`, stock, gmt_created, gmt_modified
+    from product_detail
+  </select>
 
     <update id="updateByPrimaryKey">
         update product_detail
-        <set>
-            <if test="productId!=null and productId!=''">
-                product_id=#{productId},
-            </if>
-            <if test="price!=null">
-                price=#{price},
-            </if>
-            <if test="size}!=null">
-                size=#{size},
-            </if>
-            <if test="stock!=null">
-                stock=#{stock},
-            </if>
-            gmt_modified=now()
-        </set>
-        where id=#{id}
+        set 
+        <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(productId)">
+            prodcut_id = #{productId},
+        </if>
+
+        <if test="price != null">
+            price = #{price},
+        </if>
+
+        <if test="size != null">
+            size = #{size},
+        </if>
+
+        <if test="stock != null">
+            stock = #{stock},
+        </if>
+        gmt_modified = now()
+        where id = #{id}
     </update>
 </mapper>

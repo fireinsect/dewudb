@@ -1,7 +1,7 @@
 
-spring.datasource.url=jdbc:mysql://youkeda2050.mysql.rds.aliyuncs.com:3306/dewudb?serverTimezone=GMT%2B8
-spring.datasource.username=youkeda
-spring.datasource.password=password
+spring.datasource.url=jdbc:mysql://81.70.240.186:3306/dewudb?serverTimezone=GMT%2B8
+spring.datasource.username=dewudb
+spring.datasource.password=Insectcs123
 
 mybatis.mapper-locations=classpath:com/youkeda/dewu/dao/*.xml
 
