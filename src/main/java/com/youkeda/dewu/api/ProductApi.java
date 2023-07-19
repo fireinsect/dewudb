@@ -11,20 +11,29 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-@Controller
 @RequestMapping("/api/product")
+@Controller
 public class ProductApi {
-    @Autowired
-    ProductService productService;
 
-    @GetMapping("page")
+    @Autowired
+    private ProductService productService;
+
     @ResponseBody
-    public Result<Paging<Product>> page(BasePageParam basePageParam){
-        Result<Paging<Product>> res=new Result<>();
-        res.setData(productService.pageQueryProduct(basePageParam));
-        res.setCode("200");
-        res.setMessage("hh");
-        res.setSuccess(true);
-        return res;
+    @GetMapping("/page")
+    public Result<Paging<Product>> pageQuery(BasePageParam param) {
+
+        Result<Paging<Product>> result = new Result<>();
+
+        result.setSuccess(true);
+        result.setData(productService.pageQueryProduct(param));
+        return result;
+    }
+    @ResponseBody
+    @GetMapping("/get")
+    public Result<Product> getQuery(String productId) {
+        Result<Product> productResult=new Result<>();
+        productResult.setData(productService.get(productId));
+        productResult.setCode("200");
+        return productResult;
     }
 }

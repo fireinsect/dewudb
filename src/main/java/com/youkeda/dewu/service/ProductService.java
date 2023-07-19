@@ -26,4 +26,11 @@ public interface ProductService {
      */
     Paging<Product> pageQueryProduct(BasePageParam param);
 
+    /**
+     * 根据主键获取商品
+     * @param productId 商品主键
+     * @return Product
+     */
+    Product get(String productId);
+
 }
