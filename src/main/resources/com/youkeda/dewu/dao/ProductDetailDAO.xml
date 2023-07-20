@@ -15,10 +15,10 @@
     where id = #{id,jdbcType=VARCHAR}
   </delete>
     <insert id="insert" parameterType="com.youkeda.dewu.dataobject.ProductDetailDO">
-    insert into product_detail (id, product_id, price, 
-      size, stock, gmt_created, 
+    insert into product_detail (id, product_id, price,
+      size, stock, gmt_created,
       gmt_modified)
-    values (#{id,jdbcType=VARCHAR}, #{productId,jdbcType=VARCHAR}, #{price,jdbcType=DOUBLE}, 
+    values (#{id,jdbcType=VARCHAR}, #{productId,jdbcType=VARCHAR}, #{price,jdbcType=DOUBLE},
       #{size,jdbcType=DOUBLE}, #{stock,jdbcType=INTEGER}, now(),
      now())
   </insert>
@@ -31,12 +31,17 @@
     select id, product_id, price, `size`, stock, gmt_created, gmt_modified
     from product_detail
   </select>
+    <select id="selectByProductId" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select id, product_id, price, `size`, stock, gmt_created, gmt_modified
+    from product_detail
+    where product_id = #{productId,jdbcType=VARCHAR}
+  </select>
 
     <update id="updateByPrimaryKey">
         update product_detail
-        set
+        set 
         <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(productId)">
-            product_id = #{productId},
+            prodcut_id = #{productId},
         </if>
 
         <if test="price != null">
@@ -54,10 +59,15 @@
         where id = #{id}
     </update>
 
-    <select id="selectByProductId" parameterType="java.lang.String" resultMap="BaseResultMap">
-    select id, product_id, price, `size`, stock, gmt_created, gmt_modified
-    from product_detail
-    where product_id = #{productId,jdbcType=VARCHAR}
-  </select>
+    <select id="selectByIds" resultMap="BaseResultMap">
+        select * from product_detail
+        <where>
+            id in
+            <foreach item="item" index="index" collection="ids"
+                     open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </where>
+    </select>
 
 </mapper>

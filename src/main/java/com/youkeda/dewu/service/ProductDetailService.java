@@ -4,9 +4,20 @@ import com.youkeda.dewu.model.ProductDetail;
 
 import java.util.List;
 
+/**
+ * @Author jiaoheng
+ * @DATE 2020-07-13
+ */
 public interface ProductDetailService {
-
     /**
+     * 获取多个商品详情
+     *
+     * @param productDetailIds  查询参数
+     * @return
+     */
+    public List<ProductDetail> queryProductDetail(List<String> productDetailIds);
+
+     /**
      * 添加或者修改
      *
      * @param productDetail 产品

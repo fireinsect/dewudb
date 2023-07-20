@@ -48,7 +48,6 @@ public class UserAPI {
         result.setSuccess(true);
         return result;
     }
-
     @GetMapping("/api/user/checklogin")
     @ResponseBody
     public Result<Boolean> checkLogin(HttpServletRequest request) {

@@ -7,6 +7,7 @@ import java.util.List;
 
 @Mapper
 public interface ProductDetailDAO {
+    List<ProductDetailDO> selectByIds(List<String> ids);
     int deleteByPrimaryKey(String id);
 
     int insert(ProductDetailDO record);
@@ -15,8 +16,7 @@ public interface ProductDetailDAO {
 
     List<ProductDetailDO> selectAll();
 
-    int updateByPrimaryKey(ProductDetailDO record);
-
     List<ProductDetailDO> selectByProductId(String productId);
 
+    int updateByPrimaryKey(ProductDetailDO record);
 }

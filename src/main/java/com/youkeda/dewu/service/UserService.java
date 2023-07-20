@@ -4,6 +4,8 @@ import com.youkeda.dewu.model.Result;
 import com.youkeda.dewu.model.User;
 import javax.servlet.http.HttpServletRequest;
 
+import java.util.List;
+
 public interface UserService {
 
     /**
@@ -25,11 +27,18 @@ public interface UserService {
     public Result<User> login(String userName, String pwd);
 
     /**
+     * 获取多个用户信息
+     *
+     * @param userIds  查询参数
+     * @return
+     */
+    public List<User> queryUser(List<Long> userIds);
+
+    /**
      * 判断是否登录
      *
      * @param request
      * @return
      */
     public Boolean checkLogin(HttpServletRequest request);
-
 }

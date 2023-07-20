@@ -114,9 +114,9 @@ public class OrderDO {
     public void setProductDetailId(String productDetailId) {
         this.productDetailId = productDetailId;
     }
-   public OrderDO() {
-      
-
+    
+    public OrderDO() {
+       
     }
     public OrderDO(Order order) {
         BeanUtils.copyProperties(order, this);

@@ -9,7 +9,11 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 import javax.servlet.http.HttpServletRequest;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class UserServiceImpl implements UserService {
@@ -33,7 +37,7 @@ public class UserServiceImpl implements UserService {
         }
 
         UserDO userDO = userDAO.findByUserName(userName);
-        if (userDO!=null){
+        if (userDO != null) {
             result.setCode("602");
             result.setMessage("用户名已经存在");
             return result;
@@ -76,7 +80,7 @@ public class UserServiceImpl implements UserService {
         }
 
         UserDO userDO = userDAO.findByUserName(userName);
-        if (userDO==null){
+        if (userDO == null) {
             result.setCode("602");
             result.setMessage("用户名不存在");
             return result;
@@ -87,18 +91,32 @@ public class UserServiceImpl implements UserService {
         // 生成md5值，并转大写字母
         String md5Pwd = DigestUtils.md5Hex(saltPwd).toUpperCase();
 
-        if (!StringUtils.equals(md5Pwd,userDO.getPwd())){
+        if (!StringUtils.equals(md5Pwd, userDO.getPwd())) {
             result.setCode("603");
             result.setMessage("密码不对");
             return result;
         }
-
 
         result.setSuccess(true);
 
         result.setData(userDO.toModel());
 
         return result;
+    }
+
+    @Override
+    public List<User> queryUser(List<Long> userIds) {
+        if (CollectionUtils.isEmpty(userIds)) {
+            return null;
+        }
+        List<UserDO> userDOS = userDAO.findByIds(userIds);
+        List<User> users = new ArrayList<>();
+        if (!CollectionUtils.isEmpty(userDOS)) {
+            for (UserDO userDO : userDOS) {
+                users.add(userDO.toModel());
+            }
+        }
+        return users;
     }
 
     @Override
@@ -110,4 +128,5 @@ public class UserServiceImpl implements UserService {
             return true;
         }
     }
+
 }

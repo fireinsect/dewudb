@@ -2,9 +2,11 @@ package com.youkeda.dewu.service.impl;
 
 import com.youkeda.dewu.dao.OrderDAO;
 import com.youkeda.dewu.dataobject.OrderDO;
-import com.youkeda.dewu.model.Order;
-import com.youkeda.dewu.model.OrderStatus;
+import com.youkeda.dewu.model.*;
+import com.youkeda.dewu.param.QueryOrderParam;
 import com.youkeda.dewu.service.OrderService;
+import com.youkeda.dewu.service.ProductDetailService;
+import com.youkeda.dewu.service.UserService;
 import com.youkeda.dewu.util.UUIDUtils;
 import org.redisson.api.RAtomicLong;
 import org.redisson.api.RedissonClient;
@@ -13,8 +15,11 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
-
+import java.util.stream.Collectors;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -22,6 +27,10 @@ public class OrderServiceImpl implements OrderService {
     private RedissonClient redisson;
     @Autowired
     private OrderDAO orderDAO;
+    @Autowired
+    private ProductDetailService productDetailService;
+    @Autowired
+    private UserService userService;
 
     @Override
     public Order add(Order order) {
@@ -39,6 +48,47 @@ public class OrderServiceImpl implements OrderService {
             return order;
         }
         return null;
+    }
+
+    @Override
+    public Paging<Order> queryRecentPaySuccess(QueryOrderParam queryOrderParam) {
+        Paging<Order> result = new Paging<>();
+
+        if (queryOrderParam == null) {
+            queryOrderParam = new QueryOrderParam();
+        }
+
+        int counts = orderDAO.selectCounts(queryOrderParam);
+
+        if (counts < 1) {
+            result.setTotalCount(0);
+            return result;
+        }
+        List<OrderDO> orderDOS = orderDAO.pageQuery(queryOrderParam);
+        List<Order> orders = new ArrayList<>();
+        List<String> productDetailIds = new ArrayList<>();
+        List<Long> userIds = new ArrayList<>();
+        for (OrderDO orderDO : orderDOS) {
+            orders.add(orderDO.convertToModel());
+            productDetailIds.add(orderDO.getProductDetailId());
+            userIds.add(Long.parseLong(orderDO.getUserId()));
+        }
+        List<User> users = userService.queryUser(userIds);
+        List<ProductDetail> productDetails = productDetailService.queryProductDetail(productDetailIds);
+        Map<String, ProductDetail> productDetailMap = productDetails.stream().collect(
+            Collectors.toMap(ProductDetail::getId, t -> t));
+        Map<Long, User> userMap = users.stream().collect(Collectors.toMap(User::getId, t -> t));
+
+        for (Order order : orders) {
+            order.setProductDetail(productDetailMap.get(order.getProductDetailId()));
+            order.setUser(userMap.get(Long.parseLong(order.getUserId())));
+        }
+        result.setData(orders);
+        result.setTotalCount(counts);
+        result.setPageNum(orders.size());
+        result.setPageSize(queryOrderParam.getPageSize());
+        result.setTotalPage(orders.size() / queryOrderParam.getPageNum());
+        return result;
     }
 
     /**

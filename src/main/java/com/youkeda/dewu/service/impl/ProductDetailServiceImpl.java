@@ -15,11 +15,26 @@ import java.util.List;
 
 @Service
 public class ProductDetailServiceImpl implements ProductDetailService {
-
     @Autowired
     private ProductDetailDAO productDetailDAO;
 
     @Override
+    public List<ProductDetail> queryProductDetail(List<String> productDetailIds) {
+        if (CollectionUtils.isEmpty(productDetailIds)) {
+            return null;
+        }
+        List<ProductDetailDO> productDetailDOS = productDetailDAO.selectByIds(productDetailIds);
+        List<ProductDetail> productDetails = new ArrayList<>();
+        if (CollectionUtils.isEmpty(productDetailDOS)) {
+            return productDetails;
+        }
+        for (ProductDetailDO productDetailDO : productDetailDOS) {
+            productDetails.add(productDetailDO.convertToModel());
+        }
+        return productDetails;
+    }
+
+   @Override
     public int save(ProductDetail productDetail) {
 
         if (StringUtils.isBlank(productDetail.getId())) {
@@ -50,7 +65,7 @@ public class ProductDetailServiceImpl implements ProductDetailService {
 
         return productDetails;
     }
-    
+
     @Override
     public ProductDetail get(String id) {
         if (StringUtils.isBlank(id)) {
