@@ -8,7 +8,6 @@
         <result column="purchase_num" jdbcType="INTEGER" property="purchaseNum"/>
         <result column="product_intro" jdbcType="VARCHAR" property="productIntro"/>
         <result column="product_imgs" jdbcType="VARCHAR" property="productImgs"/>
-
         <result column="gmt_created" jdbcType="TIMESTAMP" property="gmtCreated"/>
         <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified"/>
     </resultMap>

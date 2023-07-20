@@ -17,7 +17,7 @@ public class Paging<R> implements Serializable {
     /**
      * 每页数量
      */
-    private int pageSize = 10;
+    private int pageSize = 15;
     /**
      * 总页数
      */

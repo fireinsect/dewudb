@@ -9,6 +9,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import javax.servlet.http.HttpServletRequest;
 
 @Component
 public class UserServiceImpl implements UserService {
@@ -98,5 +99,15 @@ public class UserServiceImpl implements UserService {
         result.setData(userDO.toModel());
 
         return result;
+    }
+
+    @Override
+    public Boolean checkLogin(HttpServletRequest request) {
+        Object userId = request.getSession().getAttribute("userId");
+        if (userId == null) {
+            return false;
+        } else {
+            return true;
+        }
     }
 }

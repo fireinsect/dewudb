@@ -75,13 +75,4 @@ public class ProductServiceImpl implements ProductService {
 
         return result;
     }
-
-    @Override
-    public Product get(String productId) {
-
-        if(StringUtils.isBlank(productId)){
-            return null;
-        }
-        return productDAO.selectByPrimaryKey(productId).convertToModel();
-    }
 }

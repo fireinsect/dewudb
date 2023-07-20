@@ -12,20 +12,30 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 
-@RequestMapping("/api/productdetail")
+/**
+ * TODO
+ *
+ * @author zr
+ * @date 2020/7/14, 周二
+ */
 @Controller
+@RequestMapping("/api/productdetail")
 public class ProductDetailApi {
+
     @Autowired
     private ProductDetailService productDetailService;
 
-    @ResponseBody
     @GetMapping("/productId")
-    public Result<List<ProductDetail>> get(@RequestParam("productId") String productId) {
+    @ResponseBody
+    public Result<List<ProductDetail>> getProductDetails(@RequestParam("productId") String productId) {
 
         Result<List<ProductDetail>> result = new Result<>();
 
+        List<ProductDetail> productDetails = productDetailService.getByProductId(productId);
+
+        result.setData(productDetails);
         result.setSuccess(true);
-        result.setData(productDetailService.getByProductId(productId));
         return result;
+
     }
 }

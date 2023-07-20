@@ -2,10 +2,6 @@ package com.youkeda.dewu.model;
 
 import java.util.Date;
 
-/**
- * @Author jiaoheng
- * @DATE 2020-07-06
- */
 public class Product {
 
     /**
@@ -19,7 +15,7 @@ public class Product {
     private String name;
 
     /**
-     * 商品参考价格
+     * 商品默认展示的价格
      */
     private Double price;
 
@@ -44,7 +40,7 @@ public class Product {
     private Date gmtCreated;
 
     /**
-     * 修改日期
+     * 创建日期
      */
     private Date gmtModified;
 

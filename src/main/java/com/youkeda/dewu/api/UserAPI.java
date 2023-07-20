@@ -29,8 +29,7 @@ public class UserAPI {
 
     @PostMapping("/api/user/login")
     @ResponseBody
-    public Result<User> login(@RequestParam("userName") String userName, @RequestParam("pwd") String pwd,
-                              HttpServletRequest request) {
+    public Result<User> login(@RequestParam("userName") String userName, @RequestParam("pwd") String pwd, HttpServletRequest request) {
         Result<User> result = userService.login(userName, pwd);
 
         if (result.isSuccess()) {
@@ -50,4 +49,13 @@ public class UserAPI {
         return result;
     }
 
+    @GetMapping("/api/user/checklogin")
+    @ResponseBody
+    public Result<Boolean> checkLogin(HttpServletRequest request) {
+        Result result = new Result();
+
+        result.setSuccess(true);
+        result.setData(userService.checkLogin(request));
+        return result;
+    }
 }

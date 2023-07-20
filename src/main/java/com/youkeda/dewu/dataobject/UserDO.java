@@ -20,6 +20,7 @@ public class UserDO {
 
     private LocalDateTime gmtModified;
 
+
     public long getId() {
         return id;
     }

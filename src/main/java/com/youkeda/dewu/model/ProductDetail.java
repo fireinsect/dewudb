@@ -2,6 +2,7 @@ package com.youkeda.dewu.model;
 
 import java.util.Date;
 
+
 public class ProductDetail {
 
     /**
@@ -13,6 +14,11 @@ public class ProductDetail {
      * 关联商品
      */
     private String productId;
+
+    /**
+     * 商品
+     */
+    private Product product;
 
     /**
      * 价格
@@ -95,4 +101,11 @@ public class ProductDetail {
         this.gmtModified = gmtModified;
     }
 
+    public Product getProduct() {
+        return product;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
+    }
 }
