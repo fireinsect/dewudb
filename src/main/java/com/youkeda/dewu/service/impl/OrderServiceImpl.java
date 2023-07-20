@@ -46,6 +46,12 @@ public class OrderServiceImpl implements OrderService {
         if (order == null) {
             return null;
         }
+        //根据商品Id查询商品信息
+        ProductDetail productDetail = productDetailService.get(order.getProductDetailId());
+        if (productDetail == null) {
+            return null;
+        }
+        order.setTotalPrice(productDetail.getPrice());
         order.setId(UUIDUtils.getUUID());
         order.setStatus(OrderStatus.WAIT_BUYER_PAY);
         //生成唯一订单号
@@ -141,7 +147,7 @@ public class OrderServiceImpl implements OrderService {
 
         for (Order order : orders) {
             order.setProductDetail(productDetailMap.get(order.getProductDetailId()));
-            order.setUser(userMap.get(Long.parseLong(order.getUserId())));
+            order.setUser(userMap.get(order.getUserId()));
         }
         result.setData(orders);
         result.setTotalCount(counts);

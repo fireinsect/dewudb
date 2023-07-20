@@ -5,10 +5,7 @@ import com.youkeda.dewu.model.User;
 import com.youkeda.dewu.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -21,16 +18,22 @@ public class UserAPI {
     @Autowired
     private UserService userService;
 
+    /**
+     * 注册
+     */
     @PostMapping("/api/user/reg")
     @ResponseBody
-    public Result<User> reg(@RequestParam("userName") String userName, @RequestParam("pwd") String pwd) {
-        return userService.register(userName, pwd);
+    public Result<User> reg(@RequestBody User user) {
+        return userService.register(user.getUserName(), user.getPwd());
     }
 
+    /**
+     * 登录
+     */
     @PostMapping("/api/user/login")
     @ResponseBody
-    public Result<User> login(@RequestParam("userName") String userName, @RequestParam("pwd") String pwd, HttpServletRequest request) {
-        Result<User> result = userService.login(userName, pwd);
+    public Result<User> login(@RequestBody User user, HttpServletRequest request) {
+        Result<User> result = userService.login(user.getUserName(), user.getPwd());
 
         if (result.isSuccess()) {
             request.getSession().setAttribute("userId", result.getData().getId());
@@ -39,6 +42,9 @@ public class UserAPI {
         return result;
     }
 
+    /**
+     * 登出
+     */
     @GetMapping("/api/user/logout")
     @ResponseBody
     public Result logout(HttpServletRequest request) {
@@ -49,5 +55,17 @@ public class UserAPI {
         return result;
     }
 
+    /**
+     * 判断是否登录
+     */
+    @GetMapping("/api/user/checklogin")
+    @ResponseBody
+    public Result<Boolean> checkLogin(HttpServletRequest request) {
+        Result result = new Result();
+
+        result.setSuccess(true);
+        result.setData(userService.checkLogin(request));
+        return result;
+    }
 
 }

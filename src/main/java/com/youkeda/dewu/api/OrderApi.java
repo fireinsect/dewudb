@@ -5,9 +5,12 @@ import com.youkeda.dewu.model.Paging;
 import com.youkeda.dewu.model.Result;
 import com.youkeda.dewu.param.QueryOrderParam;
 import com.youkeda.dewu.service.OrderService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 @Controller
 @RequestMapping(path = "/api/order")
@@ -17,20 +20,27 @@ public class OrderApi {
     private OrderService orderService;
 
     /**
-     * 生成订单Api
+     * 生成订单Api 下单服务
      *
      * @return Result
      */
     @PostMapping(path = "/add")
     @ResponseBody
-    public Result<Order> payOrder(@RequestBody Order order) {
-        Result<Order> result = new Result();
+    public Result<Order> payOrder(@RequestBody Order order, HttpServletRequest request) {
+        Result result = new Result();
         result.setSuccess(true);
-        if (order == null) {
+        if (order == null || StringUtils.isEmpty(order.getProductDetailId())) {
             result.setSuccess(false);
-            result.setMessage("order is null");
+            result.setMessage("order is null or ProductDetailId is null");
             return result;
         }
+        Long userId = (Long)request.getSession().getAttribute("userId");
+        if (userId == null) {
+            result.setSuccess(false);
+            result.setMessage("没有获取登录信息");
+            return result;
+        }
+        order.setUserId(userId);
         Order orderResult = orderService.add(order);
         result.setData(orderResult);
         return result;

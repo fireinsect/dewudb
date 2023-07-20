@@ -45,7 +45,7 @@ public class PayServiceImpl implements PayService {
 
     @Value("${alipay.publickey:MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAkJAtCWlSvkZ05srfAmvOt/XU701GmpF3aO7XozmmZbzjTOUAcc8BzrAsqIeXJVOPRJz75fCVZ6rcsx4P2PWGHCoB293RPJpBnDT1VBVMq7k8Hw9VOJRuq56L0PZxtVHYjUA8i4vUmXc8j5K4rLGp+PC9VqNVJpj8Njv2R3ZeLndAd0B1//73SfKRSRZMNoPAl/XPSY7MAfGLzNm3B3FPVbJIEt9TM+/ijtlLpzTFCDLaLvy8EFsvoZwgpVkbxT9iRFvFWomz29/oH4xkSsZFaTMeswPUyERoMXhqMmW8hmVT/yBjiEx/NNC32Bu0Ic4DD01JZXDr/jDDjh1IA2uYNQIDAQAB}")
     private String aliPayPublicKey;
-
+    
     public Result aliPay(String orderId, PaymentParam paymentParam) {
         Result result = new Result();
         result.setSuccess(true);
@@ -104,6 +104,7 @@ public class PayServiceImpl implements PayService {
                     //更新支付流水状态
                     paymentRecordService.updateStatus(paymentRecord);
                 }
+                //更新商品付款人数
                 orderService.updateProductPersonNumber(orderNum);
             }
 

@@ -4,7 +4,6 @@ import com.youkeda.dewu.dao.ProductDAO;
 import com.youkeda.dewu.dataobject.ProductDO;
 import com.youkeda.dewu.model.Paging;
 import com.youkeda.dewu.model.Product;
-import com.youkeda.dewu.model.ProductDetail;
 import com.youkeda.dewu.param.BasePageParam;
 import com.youkeda.dewu.service.ProductService;
 import com.youkeda.dewu.util.UUIDUtils;
@@ -33,16 +32,14 @@ public class ProductServiceImpl implements ProductService {
         return productDAO.updateByPrimaryKey(new ProductDO(product));
     }
 
+
     @Override
-    public Product get(String id) {
-        if (StringUtils.isEmpty(id)) {
+    public Product get(String productId) {
+
+        if(StringUtils.isBlank(productId)){
             return null;
         }
-        ProductDO productDO = productDAO.selectByPrimaryKey(id);
-        if (productDO == null) {
-            return null;
-        }
-        return productDO.convertToModel();
+        return productDAO.selectByPrimaryKey(productId).convertToModel();
     }
 
     @Override

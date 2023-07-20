@@ -27,6 +27,10 @@ public class PaymentApi {
     @Autowired
     private PaymentRecordService paymentRecordService;
 
+    /**
+     * 支付接口
+     *
+     */
     @PostMapping(path = "/pay")
     @ResponseBody
     public Result payOrder(@RequestBody PaymentParam paymentParam) {

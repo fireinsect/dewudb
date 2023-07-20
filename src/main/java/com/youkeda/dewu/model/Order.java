@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.util.Date;
 
-
 public class Order {
     /**
      * 主键id
@@ -19,7 +18,7 @@ public class Order {
     /**
      * 用户id
      */
-    private String userId;
+    private Long userId;
     /**
      * 用户模型
      */
@@ -71,11 +70,11 @@ public class Order {
         this.orderNumber = orderNumber;
     }
 
-    public String getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 
