@@ -46,6 +46,7 @@ public class ProductDetailServiceImpl implements ProductDetailService {
 
         productDetailDAO.updateByPrimaryKey(new ProductDetailDO(productDetail));
         return productDetail;
+
     }
 
     @Override
@@ -67,4 +68,5 @@ public class ProductDetailServiceImpl implements ProductDetailService {
 
         return productDetails;
     }
+
 }

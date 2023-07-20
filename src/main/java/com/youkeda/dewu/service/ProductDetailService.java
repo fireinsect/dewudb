@@ -25,7 +25,8 @@ public interface ProductDetailService {
      */
     ProductDetail save(ProductDetail productDetail);
 
-    /**
+    
+      /**
      * 获取商品详情
      *
      * @param productId 商品主键

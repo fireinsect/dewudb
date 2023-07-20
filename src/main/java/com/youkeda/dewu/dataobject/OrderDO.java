@@ -41,7 +41,7 @@ public class OrderDO {
      */
     private String status;
 
-       /**
+    /**
      * 创建时间
      */
     private Date gmtCreated;
@@ -90,7 +90,7 @@ public class OrderDO {
     public void setStatus(String status) {
         this.status = status;
     }
-    
+
     public Date getGmtCreated() {
         return gmtCreated;
     }

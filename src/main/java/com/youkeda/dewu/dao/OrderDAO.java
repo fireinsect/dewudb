@@ -9,7 +9,11 @@ import java.util.List;
 @Mapper
 public interface OrderDAO {
     int insert(OrderDO order);
+
     int selectCounts(QueryOrderParam param);
+
     List<OrderDO> pageQuery(QueryOrderParam param);
+
+    OrderDO selectByOrderNumber(String orderNumber);
 
 }

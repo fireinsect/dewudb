@@ -1,0 +1,45 @@
+package com.youkeda.dewu.control;
+
+import com.youkeda.dewu.service.PayService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
+@Controller
+@RequestMapping(path = "/controller/pay")
+public class PaymentController {
+
+    @Autowired
+    PayService payService;
+
+    @GetMapping(path = "/alipayreturnurl")
+    String alipayReturnUrl() {
+        return "alipayurl";
+    }
+
+    void alipaycallback(HttpServletRequest request, HttpServletResponse response){
+        //获取支付宝POST过来反馈信息
+        Map<String, String> params = new HashMap<String, String>();
+        Map requestParams = request.getParameterMap();
+        for (Iterator iter = requestParams.keySet().iterator(); iter.hasNext(); ) {
+            String name = (String)iter.next();
+            String[] values = (String[])requestParams.get(name);
+            String valueStr = "";
+            for (int i = 0; i < values.length; i++) {
+                valueStr = (i == values.length - 1) ? valueStr + values[i] : valueStr + values[i] + ",";
+            }
+            //乱码解决，这段代码在出现乱码时使用。如果mysign和sign不相等也可以使用这段代码转化
+            //valueStr = new String(valueStr.getBytes("ISO-8859-1"), "gbk");
+            params.put(name, valueStr);
+        }
+        payService.alipayCallBack(params);
+    }
+
+}

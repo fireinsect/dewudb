@@ -7,19 +7,33 @@ import com.alipay.api.request.AlipayTradeWapPayRequest;
 import com.alipay.api.response.AlipayTradeWapPayResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.youkeda.dewu.model.Result;
+import com.youkeda.dewu.model.*;
 import com.youkeda.dewu.param.PaymentParam;
+import com.youkeda.dewu.param.PaymentRecordQueryParam;
+import com.youkeda.dewu.service.OrderService;
+import com.youkeda.dewu.service.PayService;
+import com.youkeda.dewu.service.PaymentRecordService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
-public class PayServiceImpl{
+public class PayServiceImpl implements PayService {
     private static final Logger logger = LoggerFactory.getLogger(PayServiceImpl.class);
+
+    @Autowired
+    private OrderService orderService;
+
+    @Autowired
+    private PaymentRecordService paymentRecordService;
 
     private ObjectMapper objectMapper = new ObjectMapper();
 
@@ -32,14 +46,26 @@ public class PayServiceImpl{
     @Value("${alipay.publickey:MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAkJAtCWlSvkZ05srfAmvOt/XU701GmpF3aO7XozmmZbzjTOUAcc8BzrAsqIeXJVOPRJz75fCVZ6rcsx4P2PWGHCoB293RPJpBnDT1VBVMq7k8Hw9VOJRuq56L0PZxtVHYjUA8i4vUmXc8j5K4rLGp+PC9VqNVJpj8Njv2R3ZeLndAd0B1//73SfKRSRZMNoPAl/XPSY7MAfGLzNm3B3FPVbJIEt9TM+/ijtlLpzTFCDLaLvy8EFsvoZwgpVkbxT9iRFvFWomz29/oH4xkSsZFaTMeswPUyERoMXhqMmW8hmVT/yBjiEx/NNC32Bu0Ic4DD01JZXDr/jDDjh1IA2uYNQIDAQAB}")
     private String aliPayPublicKey;
 
+    @Override
+    public Result alipayCallBack(Map<String, String> mapParam) {
+        return null;
+    }
+
     public Result aliPay(String orderId, PaymentParam paymentParam) {
         Result result = new Result();
         result.setSuccess(true);
 
+        //根据订单id查询出订单信息
+        // Order order = orderService.getByOrderNumber(orderId);
+        // if (order == null) {
+        //     result.setSuccess(false);
+        //     result.setMessage("未查询到任何订单信息");
+        //     return result;
+        // }
         //实例化客户端
         AlipayClient alipayClient = new DefaultAlipayClient("https://openapi.alipay.com/gateway.do", this.aliPayAppId,
-                this.aliPayAppPrivateKey, "json", "UTF-8",
-                this.aliPayPublicKey, "RSA2");
+                                                            this.aliPayAppPrivateKey, "json", "UTF-8",
+                                                            this.aliPayPublicKey, "RSA2");
         //创建API对应的request
         AlipayTradeWapPayRequest request = getAlipayTradeWapPayRequest(orderId, paymentParam);
 
@@ -51,33 +77,30 @@ public class PayServiceImpl{
             logger.error("e is:", e);
         }
         if (response.isSuccess()) {
-            logger.error("支付成功:");
+            String channelId = response.getTradeNo();
+            //更新支付记录
+            updatePayRecord(null, channelId, PayType.ALIPAY.toString(), paymentParam.getOrderNumber(),
+                            PaymentStatus.PENDING);
         }
         return result;
     }
+
     /**
      * 组装支付宝支付参数
      *
-     * @param orderId       订单号
-     * @param paymentParam  支付参数
+     * @param orderId      订单号
+     * @param paymentParam 支付参数
      * @return AlipayTradeWapPayRequest
      */
     private AlipayTradeWapPayRequest getAlipayTradeWapPayRequest(String orderId, PaymentParam paymentParam) {
         Map<String, Object> bizContentMap = new HashMap<>();
         AlipayTradeWapPayRequest request = new AlipayTradeWapPayRequest();
-        //api版本号
         request.setApiVersion("1.0");
-        //返回的url
         request.setReturnUrl("");
-        //通知的url
         request.setNotifyUrl("");
-        //订单号
         bizContentMap.put("out_trade_no", orderId);
-        //总金额
         bizContentMap.put("total_amount", paymentParam.getPayAmount());
-        //退出的url
         bizContentMap.put("quit_url", "www.youkeda.com");
-        //产品码
         bizContentMap.put("product_code", "QUICK_WAP_WAY");
 
         try {
@@ -86,5 +109,51 @@ public class PayServiceImpl{
             logger.error("e is:", e);
         }
         return request;
+    }
+
+    @Override
+    public Result payOrder(PaymentParam paymentParam) {
+        Result result = new Result<>();
+        switch (paymentParam.getPayType()) {
+            case ALIPAY:
+                result = this.aliPay(paymentParam.getOrderNumber(), paymentParam);
+                break;
+            default:
+                break;
+        }
+        return result;
+    }
+
+    /**
+     * 更新支付记录信息
+     *
+     * @param endTime       支付结束时间
+     * @param orderNum      订单号
+     * @param channelId     渠道id
+     * @param channelType   渠道类型
+     * @param paymentStatus 支付状态
+     */
+    private void updatePayRecord(String endTime, String channelId, String channelType, String orderNum,
+                                 PaymentStatus paymentStatus) {
+        PaymentRecordQueryParam param = new PaymentRecordQueryParam();
+        param.setOrderNumber(orderNum);
+        List<PaymentRecord> paymentList = paymentRecordService.query(param);
+        if (!CollectionUtils.isEmpty(paymentList)) {
+            PaymentRecord paymentRecord = paymentList.get(0);
+            paymentRecord.setPayStatus(paymentStatus);
+            if (!StringUtils.isEmpty(endTime)) {
+                paymentRecord.setPayEndTime(endTime);
+            }
+            if (!StringUtils.isEmpty(channelId)) {
+                paymentRecord.setChannelPaymentId(channelId);
+            }
+            if (!StringUtils.isEmpty(channelType)) {
+                paymentRecord.setChannelType(channelType);
+            }
+            PaymentRecord paymentRecordResult = paymentRecordService.save(paymentRecord);
+            if (paymentRecordResult == null) {
+                logger.error("更新支付记录失败！" + "paymentRecordId is: " + paymentRecordResult.getId());
+            }
+        }
     }
 }

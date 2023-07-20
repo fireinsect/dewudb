@@ -23,6 +23,13 @@
       now(), now())
   </insert>
 
+    <select id="selectByOrderNumber" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select id, user_id, order_number, product_detail_id,  total_price, status,
+      gmt_created, gmt_modified
+    from `order`
+    where order_number = #{orderNumber,jdbcType=VARCHAR}
+  </select>
+
     <select id="selectCounts" resultType="java.lang.Integer" parameterType="com.youkeda.dewu.param.QueryOrderParam">
         select count(1)
         from `order`

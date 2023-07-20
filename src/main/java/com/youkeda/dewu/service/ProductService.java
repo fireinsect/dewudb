@@ -2,7 +2,10 @@ package com.youkeda.dewu.service;
 
 import com.youkeda.dewu.model.Paging;
 import com.youkeda.dewu.model.Product;
+import com.youkeda.dewu.model.ProductDetail;
 import com.youkeda.dewu.param.BasePageParam;
+
+import java.util.List;
 
 public interface ProductService {
 

@@ -8,6 +8,7 @@ import com.youkeda.dewu.service.OrderService;
 import com.youkeda.dewu.service.ProductDetailService;
 import com.youkeda.dewu.service.UserService;
 import com.youkeda.dewu.util.UUIDUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.redisson.api.RAtomicLong;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +46,19 @@ public class OrderServiceImpl implements OrderService {
         OrderDO orderDO = new OrderDO(order);
         int insert = orderDAO.insert(orderDO);
         if (insert == 1) {
+            return order;
+        }
+        return null;
+    }
+
+    @Override
+    public Order getByOrderNumber(String orderNumber) {
+        if (StringUtils.isEmpty(orderNumber)) {
+            return null;
+        }
+        OrderDO orderDO = orderDAO.selectByOrderNumber(orderNumber);
+        if (orderDO != null) {
+            Order order = orderDO.convertToModel();
             return order;
         }
         return null;

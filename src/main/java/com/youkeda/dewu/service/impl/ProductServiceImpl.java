@@ -4,6 +4,7 @@ import com.youkeda.dewu.dao.ProductDAO;
 import com.youkeda.dewu.dataobject.ProductDO;
 import com.youkeda.dewu.model.Paging;
 import com.youkeda.dewu.model.Product;
+import com.youkeda.dewu.model.ProductDetail;
 import com.youkeda.dewu.param.BasePageParam;
 import com.youkeda.dewu.service.ProductService;
 import com.youkeda.dewu.util.UUIDUtils;
