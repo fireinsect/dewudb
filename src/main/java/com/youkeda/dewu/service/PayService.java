@@ -14,5 +14,11 @@ public interface PayService {
      */
     Result payOrder(PaymentParam paymentParam);
 
-    Result alipayCallBack(Map<String,String> mapParam);
+    /**
+     * 支付宝回调接口
+     *
+     * @param mapParam 支付宝参数
+     * @return Result
+     */
+    Result alipayCallBack(Map<String, String> mapParam);
 }

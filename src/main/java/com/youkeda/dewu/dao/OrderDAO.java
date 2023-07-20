@@ -16,4 +16,5 @@ public interface OrderDAO {
 
     OrderDO selectByOrderNumber(String orderNumber);
 
+    int update(OrderDO orderDO);
 }

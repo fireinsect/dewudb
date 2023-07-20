@@ -46,11 +46,6 @@ public class PayServiceImpl implements PayService {
     @Value("${alipay.publickey:MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAkJAtCWlSvkZ05srfAmvOt/XU701GmpF3aO7XozmmZbzjTOUAcc8BzrAsqIeXJVOPRJz75fCVZ6rcsx4P2PWGHCoB293RPJpBnDT1VBVMq7k8Hw9VOJRuq56L0PZxtVHYjUA8i4vUmXc8j5K4rLGp+PC9VqNVJpj8Njv2R3ZeLndAd0B1//73SfKRSRZMNoPAl/XPSY7MAfGLzNm3B3FPVbJIEt9TM+/ijtlLpzTFCDLaLvy8EFsvoZwgpVkbxT9iRFvFWomz29/oH4xkSsZFaTMeswPUyERoMXhqMmW8hmVT/yBjiEx/NNC32Bu0Ic4DD01JZXDr/jDDjh1IA2uYNQIDAQAB}")
     private String aliPayPublicKey;
 
-    @Override
-    public Result alipayCallBack(Map<String, String> mapParam) {
-        return null;
-    }
-
     public Result aliPay(String orderId, PaymentParam paymentParam) {
         Result result = new Result();
         result.setSuccess(true);
@@ -81,6 +76,53 @@ public class PayServiceImpl implements PayService {
             //更新支付记录
             updatePayRecord(null, channelId, PayType.ALIPAY.toString(), paymentParam.getOrderNumber(),
                             PaymentStatus.PENDING);
+        }
+        return result;
+    }
+
+    @Override
+    public Result alipayCallBack(Map<String, String> mapParam) {
+        Result result = new Result();
+        result.setSuccess(true);
+        String status = mapParam.get("trade_status");
+        String orderNum = mapParam.get("out_trade_no");
+        Order order = orderService.getByOrderNumber(orderNum);
+        String endTime = mapParam.get("gmt_close");
+        if (order != null) {
+            //交易成功
+            if ("TRADE_SUCCESS".equals(status)) {
+                // 更新订单状态
+                orderService.updateOrderStatus(orderNum, OrderStatus.TRADE_PAID_SUCCESS);
+
+                //更新支付流水
+                PaymentRecordQueryParam queryParam = new PaymentRecordQueryParam();
+                queryParam.setOrderNumber(orderNum);
+                List<PaymentRecord> paymentRecords = paymentRecordService.query(queryParam);
+                if (!CollectionUtils.isEmpty(paymentRecords)) {
+                    PaymentRecord paymentRecord = paymentRecords.get(0);
+                    paymentRecord.setPayStatus(PaymentStatus.SUCCESS);
+                    //更新支付流水状态
+                    paymentRecordService.updateStatus(paymentRecord);
+                }
+                orderService.updateProductPersonNumber(orderNum);
+            }
+
+            //交易关闭
+            if ("TRADE_CLOSED".equals(status)) {
+                // 更新订单状态
+                orderService.updateOrderStatus(orderNum, OrderStatus.TRADE_PAID_FAILED);
+
+                //更新支付流水
+                PaymentRecordQueryParam queryParam = new PaymentRecordQueryParam();
+                queryParam.setOrderNumber(orderNum);
+                List<PaymentRecord> paymentRecords = paymentRecordService.query(queryParam);
+                if (!CollectionUtils.isEmpty(paymentRecords)) {
+                    PaymentRecord paymentRecord = paymentRecords.get(0);
+                    paymentRecord.setPayStatus(PaymentStatus.FAILURE);
+                    //更新支付流水状态
+                    paymentRecordService.updateStatus(paymentRecord);
+                }
+            }
         }
         return result;
     }

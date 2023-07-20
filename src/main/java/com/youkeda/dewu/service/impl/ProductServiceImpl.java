@@ -34,6 +34,18 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public Product get(String id) {
+        if (StringUtils.isEmpty(id)) {
+            return null;
+        }
+        ProductDO productDO = productDAO.selectByPrimaryKey(id);
+        if (productDO == null) {
+            return null;
+        }
+        return productDO.convertToModel();
+    }
+
+    @Override
     public Paging<Product> pageQueryProduct(BasePageParam param) {
 
         Paging<Product> result = new Paging<>();
@@ -66,7 +78,7 @@ public class ProductServiceImpl implements ProductService {
         //实际返回的数据
         List<ProductDO> productDOS = productDAO.pageQuery(param);
         List<Product> productList = new ArrayList<>();
-        if(!CollectionUtils.isEmpty(productDOS)){
+        if (!CollectionUtils.isEmpty(productDOS)) {
             for (ProductDO productDO : productDOS) {
                 productList.add(productDO.convertToModel());
             }

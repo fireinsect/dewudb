@@ -1,13 +1,18 @@
 package com.youkeda.dewu.control;
 
+import com.youkeda.dewu.model.Result;
 import com.youkeda.dewu.service.PayService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -16,15 +21,18 @@ import java.util.Map;
 @RequestMapping(path = "/controller/pay")
 public class PaymentController {
 
+    private static final Logger logger = LoggerFactory.getLogger(PaymentController.class);
+
     @Autowired
-    PayService payService;
+    private PayService payService;
 
     @GetMapping(path = "/alipayreturnurl")
     String alipayReturnUrl() {
         return "alipayurl";
     }
 
-    void alipaycallback(HttpServletRequest request, HttpServletResponse response){
+    @PostMapping(path = "/alipaycallback")
+    void alipaycallback(HttpServletRequest request, HttpServletResponse response) {
         //获取支付宝POST过来反馈信息
         Map<String, String> params = new HashMap<String, String>();
         Map requestParams = request.getParameterMap();
@@ -39,7 +47,14 @@ public class PaymentController {
             //valueStr = new String(valueStr.getBytes("ISO-8859-1"), "gbk");
             params.put(name, valueStr);
         }
-        payService.alipayCallBack(params);
+        Result payResult = payService.alipayCallBack(params);
+        try {
+            if (payResult.isSuccess()) {
+                response.getWriter().print("success");
+                response.getWriter().flush();
+            }
+        } catch (IOException e) {
+            logger.error("", e);
+        }
     }
-
 }

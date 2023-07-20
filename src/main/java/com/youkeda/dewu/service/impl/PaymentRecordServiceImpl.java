@@ -56,4 +56,14 @@ public class PaymentRecordServiceImpl implements PaymentRecordService {
         });
         return paymentRecords;
     }
+
+    @Override
+    public PaymentRecord updateStatus(PaymentRecord paymentRecord) {
+        PaymentRecordDO paymentRecordDO = new PaymentRecordDO(paymentRecord);
+        int updateSize = paymentRecordDAO.update(paymentRecordDO);
+        if (updateSize < 1) {
+            return null;
+        }
+        return paymentRecord;
+    }
 }

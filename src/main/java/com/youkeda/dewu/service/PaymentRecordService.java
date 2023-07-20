@@ -24,4 +24,13 @@ public interface PaymentRecordService {
      * @return List<PaymentRecord>
      */
     List<PaymentRecord> query(PaymentRecordQueryParam queryParam);
+
+    /**
+     * 更新状态
+     *
+     * @param paymentRecord 支付记录
+     * @return PaymentRecord
+     */
+    PaymentRecord updateStatus(PaymentRecord paymentRecord);
+
 }
