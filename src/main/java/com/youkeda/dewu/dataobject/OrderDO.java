@@ -114,7 +114,7 @@ public class OrderDO {
     public void setProductDetailId(String productDetailId) {
         this.productDetailId = productDetailId;
     }
-    public OrderDO() {
+   public OrderDO() {
       
 
     }

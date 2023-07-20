@@ -50,9 +50,14 @@ public class ProductDetailServiceImpl implements ProductDetailService {
 
         return productDetails;
     }
-
+    
     @Override
-    public ProductDetail getByMain(String id) {
-        return productDetailDAO.selectByPrimaryKey(id).convertToModel();
+    public ProductDetail get(String id) {
+        if (StringUtils.isBlank(id)) {
+            return null;
+        }
+        ProductDetailDO productDetailDO = productDetailDAO.selectByPrimaryKey(id);
+        ProductDetail productDetail = productDetailDO.convertToModel();
+        return productDetail;
     }
 }

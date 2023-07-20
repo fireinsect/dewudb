@@ -22,5 +22,11 @@ public interface ProductDetailService {
      */
     List<ProductDetail> getByProductId(String productId);
 
-    ProductDetail getByMain(String id);
+    /**
+     * 获取商品详情
+     *
+     * @param id 主键
+     * @return ProductDetail
+     */
+    ProductDetail get(String id);
 }
