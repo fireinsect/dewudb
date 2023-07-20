@@ -41,7 +41,7 @@ public class OrderDO {
      */
     private String status;
 
-    /**
+       /**
      * 创建时间
      */
     private Date gmtCreated;
@@ -90,7 +90,7 @@ public class OrderDO {
     public void setStatus(String status) {
         this.status = status;
     }
-
+    
     public Date getGmtCreated() {
         return gmtCreated;
     }
@@ -114,10 +114,10 @@ public class OrderDO {
     public void setProductDetailId(String productDetailId) {
         this.productDetailId = productDetailId;
     }
-    
+
     public OrderDO() {
-       
     }
+
     public OrderDO(Order order) {
         BeanUtils.copyProperties(order, this);
         if (order.getStatus() != null) {

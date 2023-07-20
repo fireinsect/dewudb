@@ -9,8 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-
 @Controller
 @RequestMapping(path = "/api/order")
 public class OrderApi {
@@ -25,32 +23,36 @@ public class OrderApi {
      */
     @PostMapping(path = "/add")
     @ResponseBody
-   public Result<Order> payOrder(@RequestBody Order order, HttpServletRequest request) {
-        Result result = new Result();
+    public Result<Order> payOrder(@RequestBody Order order) {
+        Result<Order> result = new Result();
         result.setSuccess(true);
         if (order == null) {
             result.setSuccess(false);
             result.setMessage("order is null");
             return result;
         }
-        String userId = (String)request.getSession().getAttribute("userId");
-        if (userId == null) {
-            result.setSuccess(false);
-            result.setMessage("没有获取登录信息");
-            return result;
-        }
-        order.setUserId(userId);
         Order orderResult = orderService.add(order);
         result.setData(orderResult);
         return result;
     }
-    @GetMapping("/queryrecentpaysuccess")
+
+    /**
+     * 查询支付成功订单APi
+     *
+     * @return Result
+     */
+    @GetMapping(path = "/queryrecentpaysuccess")
     @ResponseBody
-    public Result<Paging<Order>> queryrecentpaysuccess(QueryOrderParam queryOrderParam){
-        Result<Paging<Order>> result=new Result<>();
-        result.setData(orderService.queryRecentPaySuccess(queryOrderParam));
-        result.setCode("200");
+    public Result<Paging<Order>> queryRecentPaySuccess(@RequestBody QueryOrderParam queryOrderParam) {
+        Result<Paging<Order>> result = new Result();
         result.setSuccess(true);
+        if (queryOrderParam == null) {
+            result.setSuccess(false);
+            result.setMessage("queryOrderParam is null");
+            return result;
+        }
+
+        result.setData(orderService.queryRecentPaySuccess(queryOrderParam));
         return result;
     }
 }

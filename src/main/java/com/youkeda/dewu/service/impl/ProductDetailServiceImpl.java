@@ -34,16 +34,18 @@ public class ProductDetailServiceImpl implements ProductDetailService {
         return productDetails;
     }
 
-   @Override
-    public int save(ProductDetail productDetail) {
+    @Override
+    public ProductDetail save(ProductDetail productDetail) {
 
         if (StringUtils.isBlank(productDetail.getId())) {
             productDetail.setId(UUIDUtils.getUUID());
-            return productDetailDAO.insert(new ProductDetailDO(productDetail));
+
+            productDetailDAO.insert(new ProductDetailDO(productDetail));
+            return productDetail;
         }
 
-        return productDetailDAO.updateByPrimaryKey(new ProductDetailDO(productDetail));
-
+        productDetailDAO.updateByPrimaryKey(new ProductDetailDO(productDetail));
+        return productDetail;
     }
 
     @Override
@@ -64,15 +66,5 @@ public class ProductDetailServiceImpl implements ProductDetailService {
         }
 
         return productDetails;
-    }
-
-    @Override
-    public ProductDetail get(String id) {
-        if (StringUtils.isBlank(id)) {
-            return null;
-        }
-        ProductDetailDO productDetailDO = productDetailDAO.selectByPrimaryKey(id);
-        ProductDetail productDetail = productDetailDO.convertToModel();
-        return productDetail;
     }
 }

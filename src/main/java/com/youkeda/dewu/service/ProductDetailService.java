@@ -17,13 +17,13 @@ public interface ProductDetailService {
      */
     public List<ProductDetail> queryProductDetail(List<String> productDetailIds);
 
-     /**
-     * 添加或者修改
+    /**
+     * 添加或者删除商品详情
      *
-     * @param productDetail 产品
+     * @param productDetail 商品详情
      * @return int
      */
-    int save(ProductDetail productDetail);
+    ProductDetail save(ProductDetail productDetail);
 
     /**
      * 获取商品详情
@@ -32,12 +32,4 @@ public interface ProductDetailService {
      * @return ProductDetail
      */
     List<ProductDetail> getByProductId(String productId);
-
-    /**
-     * 获取商品详情
-     *
-     * @param id 主键
-     * @return ProductDetail
-     */
-    ProductDetail get(String id);
 }
