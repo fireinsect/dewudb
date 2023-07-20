@@ -1,9 +1,6 @@
 package com.youkeda.dewu.model;
 
-/**
- * @Author jiaoheng
- * @DATE 2020-01-06
- */
+
 public enum PaymentStatus {
     /**
      * 支付中

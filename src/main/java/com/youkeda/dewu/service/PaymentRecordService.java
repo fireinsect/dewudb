@@ -5,10 +5,7 @@ import com.youkeda.dewu.param.PaymentRecordQueryParam;
 
 import java.util.List;
 
-/**
- * @Author songchuanming
- * @DATE 2020/7/7.
- */
+
 public interface PaymentRecordService {
     /**
      * 添加或修改支付记录

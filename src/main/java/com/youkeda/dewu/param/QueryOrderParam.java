@@ -5,10 +5,7 @@ import com.youkeda.dewu.model.Paging;
 
 import java.util.Date;
 
-/**
- * @Author jiaoheng
- * @DATE 2020-07-13
- */
+
 public class QueryOrderParam extends Paging {
 
     /**

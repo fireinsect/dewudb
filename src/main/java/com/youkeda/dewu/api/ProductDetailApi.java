@@ -9,12 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-/**
- * TODO
- *
- * @author zr
- * @date 2020/7/14, 周二
- */
+
 @Controller
 @RequestMapping("/api/productdetail")
 public class ProductDetailApi {

@@ -9,9 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
-/**
- * @author joe
- */
+
 @Controller
 public class UserAPI {
 

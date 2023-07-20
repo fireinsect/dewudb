@@ -4,10 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.Serializable;
 
-/**
- * @Author songchuanming
- * @DATE 2020/7/6.
- */
+
 public class Result<D> implements Serializable {
     @JsonProperty("isSuccess")
     private boolean success = false;

@@ -4,10 +4,7 @@ import com.youkeda.dewu.model.ProductDetail;
 
 import java.util.List;
 
-/**
- * @Author jiaoheng
- * @DATE 2020-07-13
- */
+
 public interface ProductDetailService {
     /**
      * 获取多个商品详情

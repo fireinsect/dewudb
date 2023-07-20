@@ -1,9 +1,6 @@
 package com.youkeda.dewu.param;
 
-/**
- * @Author songchuanming
- * @DATE 2020/7/15.
- */
+
 public class BasePageParam {
     /**
      * 页数
