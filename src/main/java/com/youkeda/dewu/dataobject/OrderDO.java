@@ -115,7 +115,7 @@ public class OrderDO {
         this.productDetailId = productDetailId;
     }
     public OrderDO() {
-       
+      
 
     }
     public OrderDO(Order order) {

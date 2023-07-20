@@ -21,4 +21,6 @@ public interface ProductDetailService {
      * @return ProductDetail
      */
     List<ProductDetail> getByProductId(String productId);
+
+    ProductDetail getByMain(String id);
 }

@@ -6,6 +6,10 @@ spring.datasource.password=Insectcs123
 mybatis.mapper-locations=classpath:com/youkeda/dewu/dao/*.xml
 
 
+spring.redis.host=81.70.240.186
+spring.redis.port=6379
+spring.redis.password=Insectcs123
+
 
 spring.datasource.druid.stat-view-servlet.enabled=true
 spring.datasource.druid.stat-view-servlet.url-pattern=/druid/*

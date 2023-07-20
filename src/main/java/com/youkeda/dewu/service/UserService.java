@@ -23,7 +23,7 @@ public interface UserService {
      * @return
      */
     public Result<User> login(String userName, String pwd);
-    
+
     /**
      * 判断是否登录
      *

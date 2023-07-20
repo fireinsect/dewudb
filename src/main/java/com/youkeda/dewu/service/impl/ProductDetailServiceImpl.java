@@ -50,4 +50,9 @@ public class ProductDetailServiceImpl implements ProductDetailService {
 
         return productDetails;
     }
+
+    @Override
+    public ProductDetail getByMain(String id) {
+        return productDetailDAO.selectByPrimaryKey(id).convertToModel();
+    }
 }

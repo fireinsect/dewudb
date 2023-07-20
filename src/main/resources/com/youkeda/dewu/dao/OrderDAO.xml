@@ -13,9 +13,14 @@
     </resultMap>
 
     <insert id="insert" parameterType="com.youkeda.dewu.dataobject.OrderDO">
-        insert into orders values
-        (
-            #{id},#{orderNumber},#{productDetailId},#{userId},#{totalPrice},#{status},now(),now()
-        )
-    </insert>
+    insert into `order` (id, order_number,
+       product_detail_id, user_id,
+      total_price, status,
+      gmt_created, gmt_modified)
+    values (#{id,jdbcType=VARCHAR}, #{orderNumber,jdbcType=VARCHAR},
+      #{productDetailId,jdbcType=VARCHAR}, #{userId,jdbcType=VARCHAR},
+      #{totalPrice,jdbcType=DOUBLE}, #{status,jdbcType=VARCHAR},
+      now(), now())
+  </insert>
+
 </mapper>
